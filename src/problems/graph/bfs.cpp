@@ -1,27 +1,40 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include<bits/stdc++.h>
 
 using namespace std;
 
-vector<vector<int>> adj(9);
-vector<bool> check(9);
+const int N = 9;
+vector<int> adj[N];
 queue<int> q;
+bool visited[N];
+int parent[N];
 
+// using queue
 void solve2(int k) {
   q.push(k);
-  check[k] = true;
+  visited[k] = true;
   while(!q.empty()) {
     int top = q.front();
     q.pop();
     cout<<top<<endl;
     for(int v: adj[top]) {
-      if (!check[v]) {
+      if (!visited[v]) {
         q.push(v);
-        check[v] = true;
+        visited[v] = true;
+        parent[v] = top;
       }
     }
   }
+}
+
+vector<int> getPath(int src, int dst) {
+  vector<int> path;
+  
+  for(int v = dst; v!= src; v=parent[v]) {
+    path.push_back(v);
+  }
+  path.push_back(src);
+  reverse(path.begin(), path.end());
+  return path;
 }
 
 void run() {
@@ -35,4 +48,9 @@ void run() {
   adj[7] = {6, 8, 1, 0};
   adj[8] = {7, 6, 2};
   solve2(0);
+  cout<<"==== path ===="<<endl;
+  vector<int> path = getPath(2, 4);
+  for(int v: path) {
+    cout<<v<<endl;
+  }
 }
