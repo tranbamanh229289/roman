@@ -8,20 +8,21 @@ int parent[N];
 bool visited[N];
 
 
-void dfs(int k) {
+// using dfs
+bool hasCycleDFS(int k) {
   visited[k] = true;
   
   for(int v: adj[k]) {
     if (!visited[v]) {
-      dfs(k);
       parent[v] = k;
+      if (hasCycleDFS(v)) return true;
+    } else if (v != parent[k]){
+      return true;
     }
   }
+  return false;
 }
 
-void solve(int k) {
-
-}
 
 void run() {
   adj[0] = {1, 7};
@@ -35,4 +36,6 @@ void run() {
   adj[8] = {7, 6, 2};
   adj[9] = {10};
   adj[10] = {9};
+  bool result = hasCycleDFS(0);
+  cout<<result<<endl;
 }

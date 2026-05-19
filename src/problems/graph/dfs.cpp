@@ -13,8 +13,9 @@ void solve1(int k) {
   cout<< k << endl;
   for(int v: adj[k]) {
     if(!visited[v]) {
-      solve1(v);
       parent[v] = k;
+      solve1(v);
+   
     } 
   }
   
