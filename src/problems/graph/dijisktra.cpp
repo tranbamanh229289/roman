@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int N = 9;
+const int N = 3;
 const int INF = 1e9;
 struct ComparePair{
   bool operator()(const pair<int, int>&a, const pair<int, int> & b) {
@@ -21,8 +21,8 @@ void solve(int source) {
     pair<int, int> top = pq.top();
     int u = top.first;
     int d = top.second;
-
     pq.pop();
+
     if (d > dist[u]) continue;
     for (pair<int, int> edge: adj[u]) {
       int v = edge.first;
@@ -59,7 +59,7 @@ void run() {
   fill(dist.begin(), dist.end(), INF);
 
   int source = 0;
-  int target = 8;
+  int target = 1;
   dist[source] = 0;
   pq.push({source, dist[source]});
   solve(source);
