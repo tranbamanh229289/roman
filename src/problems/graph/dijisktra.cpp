@@ -2,7 +2,7 @@
 
 using namespace std;
 
-const int N = 3;
+const int N = 9;
 const int INF = 1e9;
 struct ComparePair{
   bool operator()(const pair<int, int>&a, const pair<int, int> & b) {
@@ -11,7 +11,7 @@ struct ComparePair{
 };
 
 vector<pair<int, int>> adj[N];
-vector<int> dist(N);
+vector<int> dist(N, INF);
 priority_queue<pair<int, int>, vector<pair<int, int>>, ComparePair> pq;
 int parent[N];
 
@@ -56,10 +56,9 @@ void run() {
   adj[6] = {{8, 6}, {5, 2}, {7, 1}};
   adj[7] = {{6, 1}, {8, 7}, {1, 11}, {0, 8}};
   adj[8] = {{7, 7}, {6, 6}, {2, 2}};
-  fill(dist.begin(), dist.end(), INF);
 
   int source = 0;
-  int target = 1;
+  int target = 8;
   dist[source] = 0;
   pq.push({source, dist[source]});
   solve(source);
