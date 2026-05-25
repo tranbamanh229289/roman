@@ -12,9 +12,10 @@ vector<int> arr(9);
 
 class BST {
   private:
-    Node* root;
+    Node* root = nullptr;
 
     void _preOrder(Node *node) {
+      if(!node) return;
       cout<<node->val<<", ";
 
       if (node->l) {
@@ -26,6 +27,7 @@ class BST {
     }
 
     void _inOrder(Node *node) {
+      if(!node) return;
       if (node->l) {
         _inOrder(node->l);
       }
@@ -38,6 +40,7 @@ class BST {
     }
 
     void _postOrder(Node * node) {
+      if(!node) return;
       if (node->l) {
         _postOrder(node->l);
       }
@@ -128,9 +131,8 @@ class BST {
     }
 
     BST(vector<int> arr) {
-      Node *root = new Node(arr[0]);
-      for(int i = 1; i < arr.size(); i++) {
-        _insert(root, arr[i]);
+      for(int val: arr) {
+        root = _insert(root, val);
       }
     }
 
@@ -139,11 +141,11 @@ class BST {
     }
 
     void insert(int val) {
-      _insert(root, val);
+      root = _insert(root, val);
     }
 
     void remove(int val) {
-      _remove(root, val);
+      root = _remove(root, val);
     }
 
     void preOrder() {
@@ -160,14 +162,9 @@ class BST {
 void run() {
   arr = {8,3,10,1,6,4,7,14,13};
 
-  BST bst = BST();
-  for(int i: arr){
-    bst.insert(i);
-  }
-  bst.postOrder();
-  bst.remove(3);
-  cout<<endl;
-  bst.postOrder();
+  BST bst = BST(arr);
+
+  bst.preOrder();
 }
 
 

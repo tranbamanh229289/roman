@@ -3,14 +3,16 @@
 using namespace std;
 
 struct Node {
-  int val;
+  int val, height;
   Node *l, *r;
-  Node(int val): val(val), l(nullptr), r(nullptr){}
+  Node(int val): val(val), height(1), l(nullptr), r(nullptr){}
 };
+
+vector<int> arr(9);
 
 class AVL {
   private:
-    Node *root;
+    Node *root = nullptr;
     
     bool _existed(Node* node, int val) {
       if (!node) return false;
@@ -24,19 +26,101 @@ class AVL {
       if (!node) {
         return new Node(val);
       }
-      if (val == node->val) {
-
-      }
       
       if (val < node->val) node->l = _insert(node->l, val);
-      else if(val > node->val) node ->r = _insert(node->r, val);
+      else if (val > node->val) node ->r = _insert(node->r, val);
       
-      return node;
+      return _balance(node);
     }
 
     Node* _remove(Node* node, int val) {
+      if (!node) {
+        return nullptr;
+      }
 
+      if (val < node->val) node -> l = _remove(node->l, val);
+      else if(val > node->val) node -> r = _remove(node->r, val);
+      else {
+        if (!node->l) {
+          Node* temp = node->r;
+          delete(node);
+          return temp;
+        }
+
+        if (!node->r) {
+          Node* temp = node->l;
+          delete(node);
+          return temp;
+        }
+
+        else {
+          int val = findMin(node->r);
+          node->val = val;
+          node->r = _remove(node->r, val);
+        }
+      }
+
+      return _balance(node);
     }
+
+    int findMin(Node* node) {
+      while(node->l) {
+        node = node->l;
+      };
+      return node->val;
+    }
+
+    int findMax(Node * node) {
+      while(node->r) {
+        node = node->r;
+      };
+      return node->val;
+    }
+
+    Node* _balance(Node* node) {
+      node->height = 1 + max(_height(node->l), _height(node->r));
+      int bf = _height(node->l) - _height(node->r);
+
+      if (bf > 1) {
+        if (_height(node->l->l) - _height(node->l->r) < 0) {
+          node->l = _leftRotate(node->l);
+        } 
+        node = _rightRotate(node);
+        
+      } else if (bf < -1) {
+        if (_height(node->r->l) - _height(node->r->r) > 0) {
+          node->r = _rightRotate(node->r);
+        }
+        node = _leftRotate(node);
+      }
+
+      return node;
+    }
+
+    int _height(Node* node) {
+      return node ? node->height : 0;
+    }
+
+    Node* _leftRotate(Node *x) {
+      Node* y = x->r;
+      Node* T2 = y->l;
+      y->l = x;
+      x->r = T2;
+      x->height = 1 + max(_height(x->l), _height(x->r));
+      y->height = 1 + max(_height(y->l), _height(y->r));
+      return y;
+    }
+
+    Node* _rightRotate(Node *x) {
+      Node* y = x->l;
+      Node* T2 = y->r;
+      y->r = x;
+      x->l = T2;
+      x->height = 1 + max(_height(x->l), _height(x->r));
+      y->height = 1 + max(_height(y->l), _height(y->r));
+      return y;
+    }
+
 
     void _preOrder(Node *node) {
       cout<<node->val<<", ";
@@ -80,18 +164,17 @@ class AVL {
       root = new Node(val);
     }
     AVL(vector<int> arr) {
-      root = new Node(arr[0]);
-      for(int i = 1; i < arr.size(); i++) {
-        _insert(root, arr[i]);
+      for(int val: arr) {
+        root = _insert(root, val);
       }
     }
 
     void insert(int val) {
-      _insert(root, val);
+      root = _insert(root, val);
     }
 
     void remove(int val) {
-      _remove(root, val);
+      root = _remove(root, val);
     }
 
     bool existed(int val) {
@@ -110,4 +193,10 @@ class AVL {
 };
 
 void run(){
+  arr = {8,3,10,1,6,4,7,14,13};
+  AVL avl = AVL(arr);
+  avl.preOrder();
+  avl.remove(13);
+  cout<<endl;
+  avl.preOrder();
 }
